@@ -1,0 +1,21 @@
+---
+- name: Monitoramento de acessos
+  hosts: all
+  become: yes  # Add become to gain root privileges
+  tasks:
+    - name: Criar script de monitoramento
+      copy:
+        dest: /etc/profile.d/track_access.sh
+        content: |
+          echo "$(date '+%Y-%m-%d %H:%M:%S'); $USER; $SSH_TTY; $SSH_CLIENT" >> /dados/nfs/acessos
+        mode: "0755"
+        owner: root
+        group: root
+
+    - name: Garantir que o arquivo de log existe
+      file:
+        path: /dados/nfs/acessos
+        state: touch
+        mode: '0666'
+        owner: nobody
+        group: nogroup

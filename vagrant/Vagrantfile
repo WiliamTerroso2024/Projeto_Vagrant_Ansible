@@ -1,0 +1,27 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "generic/debian12"
+  config.vm.hostname = "p01-Wiliam"
+  
+  config.vm.network "private_network", ip: "192.168.57.10"
+  
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = 1024
+    vb.name = "p01-Wiliam"
+    
+    # Adding 3 additional disks
+    (1..3).each do |i|
+      disk_path = "./disk#{i}.vdi"
+      unless File.exist?(disk_path)
+        vb.customize ['createhd', '--filename', disk_path, '--size', 10 * 1024]
+      end
+      vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', 
+                    '--port', i, '--device', 0, '--type', 'hdd', 
+                    '--medium', disk_path]
+    end
+  end
+
+  # Ansible provisioning
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbook.yml"
+  end
+end

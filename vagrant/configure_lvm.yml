@@ -1,0 +1,44 @@
+---
+- name: Configurar LVM
+  hosts: all
+  become: yes
+  tasks:
+    - name: Instalar o pacote lvm2
+      apt:
+        name: lvm2
+        state: present
+
+    - name: Verificar se volume group existe
+      command: vgs dados
+      register: vg_check
+      ignore_errors: yes
+
+    - name: Criar volume group "dados"
+      command: vgcreate dados /dev/sdb /dev/sdc /dev/sdd
+      when: vg_check.rc != 0
+
+    - name: Verificar se logical volume existe
+      command: lvs /dev/dados/sistema
+      register: lv_check
+      ignore_errors: yes
+
+    - name: Criar logical volume "sistema"
+      command: lvcreate -L 15G -n sistema dados
+      when: lv_check.rc != 0
+
+    - name: Formatar o volume em ext4
+      filesystem:
+        fstype: ext4
+        dev: /dev/dados/sistema
+
+    - name: Criar ponto de montagem
+      file:
+        path: /dados
+        state: directory
+
+    - name: Configurar montagem automática no fstab
+      blockinfile:
+        path: /etc/fstab
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+        block: "/dev/dados/sistema /dados ext4 defaults 0 0"
+        create: yes

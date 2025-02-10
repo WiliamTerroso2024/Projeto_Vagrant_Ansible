@@ -1,0 +1,8 @@
+- name: Atualizar o sistema operacional
+  hosts: all
+  become: yes
+  tasks:
+    - name: Atualizar cache e pacotes do sistema
+      apt:
+        update_cache: yes
+        upgrade: safe

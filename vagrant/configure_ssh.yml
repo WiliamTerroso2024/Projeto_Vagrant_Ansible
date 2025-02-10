@@ -1,0 +1,38 @@
+- name: Configurar SSH
+  hosts: all
+  tasks:
+    - name: Gerar chave SSH no computador local
+      openssh_keypair:
+        path: "~/.ssh/id_rsa"
+        type: rsa
+        size: 4096
+        state: present
+        force: no
+      delegate_to: localhost
+      become: no
+
+    - name: Criar diretório .ssh no servidor remoto
+      file:
+        path: ~/.ssh
+        state: directory
+        mode: '0700'
+
+    - name: Copiar chave pública para o servidor remoto
+      authorized_key:
+        user: "{{ ansible_user }}"
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+    - name: Bloquear login do root e autenticação por senha
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      with_items:
+        - { regexp: "^PermitRootLogin", line: "PermitRootLogin no" }
+        - { regexp: "^PasswordAuthentication", line: "PasswordAuthentication no" }
+
+    - name: Reiniciar serviço SSH
+      service:
+        name: sshd
+        state: restarted

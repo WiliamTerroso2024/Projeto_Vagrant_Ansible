@@ -1,0 +1,14 @@
+- name: Configurar servidor NFS
+  hosts: all
+  tasks:
+    - name: Instalar NFS server
+      apt:
+        name: nfs-kernel-server
+        state: present
+
+    - name: Configurar diretório compartilhado
+      blockinfile:
+        path: /etc/exports
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+        block: |
+          /dados/nfs 192.168.57.0/24(rw,sync,no_root_squash,all_squash,anonuid=1000,anongid=1000)

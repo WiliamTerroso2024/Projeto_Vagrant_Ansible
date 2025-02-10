@@ -1,0 +1,13 @@
+- name: Configurar SUDO para o grupo ifpb
+  hosts: all
+  tasks:
+    - name: Criar grupo ifpb
+      group:
+        name: "ifpb"
+        state: present
+
+    - name: Adicionar grupo ifpb ao sudoers
+      copy:
+        dest: /etc/sudoers.d/ifpb
+        content: "%ifpb ALL=(ALL) NOPASSWD:ALL"
+        mode: "0440"

@@ -1,0 +1,85 @@
+- name: Verificar configurações implementadas
+  hosts: all
+  tasks:
+    - name: Verificar hostname
+      command: hostname
+      register: hostname_output
+      changed_when: false
+
+    - name: Verificar usuário wiliam
+      command: grep wiliam /etc/passwd
+      register: user_output
+      changed_when: false
+
+    - name: Verificar grupo ifpb
+      command: grep ifpb /etc/group
+      register: group_output
+      changed_when: false
+
+    - name: Verificar configuração sudo
+      command: cat /etc/sudoers.d/ifpb
+      register: sudo_output
+      changed_when: false
+
+    - name: Verificar configuração SSH
+      command: cat /etc/ssh/sshd_config
+      register: ssh_output
+      changed_when: false
+
+    - name: Verificar configuração LVM
+      command: lvdisplay
+      register: lvm_output
+      changed_when: false
+
+    - name: Verificar montagens
+      command: cat /etc/fstab
+      register: fstab_output
+      changed_when: false
+
+    - name: Verificar configuração NFS
+      command: cat /etc/exports
+      register: nfs_output
+      changed_when: false
+
+    - name: Verificar script de monitoramento
+      command: cat /etc/profile.d/track_access.sh
+      register: monitoring_output
+      changed_when: false
+
+    - name: Verificar mensagem de boas-vindas
+      command: cat /etc/motd
+      register: motd_output
+      changed_when: false
+
+    - name: Exibir todas as configurações
+      debug:
+        msg: |
+          HOSTNAME:
+          {{ hostname_output.stdout }}
+          
+          USUÁRIO:
+          {{ user_output.stdout }}
+          
+          GRUPO:
+          {{ group_output.stdout }}
+          
+          CONFIGURAÇÃO SUDO:
+          {{ sudo_output.stdout }}
+          
+          CONFIGURAÇÃO SSH:
+          {{ ssh_output.stdout }}
+          
+          CONFIGURAÇÃO LVM:
+          {{ lvm_output.stdout }}
+          
+          MONTAGENS (FSTAB):
+          {{ fstab_output.stdout }}
+          
+          CONFIGURAÇÃO NFS:
+          {{ nfs_output.stdout }}
+          
+          SCRIPT DE MONITORAMENTO:
+          {{ monitoring_output.stdout }}
+          
+          MENSAGEM DE BOAS-VINDAS:
+          {{ motd_output.stdout }}

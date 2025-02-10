@@ -1,0 +1,7 @@
+- name: Configurar o hostname
+  hosts: all
+  tasks:
+    - name: Alterar hostname
+      hostname:
+        name: "p01-Wiliam"
+

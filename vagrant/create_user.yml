@@ -1,0 +1,15 @@
+- name: Criar usuário e configurar mensagem de boas-vindas
+  hosts: all
+  tasks:
+    - name: Criar usuário wiliam
+      user:
+        name: "wiliam"
+        state: present
+        shell: /bin/bash
+
+    - name: Configurar mensagem de boas-vindas
+      copy:
+        dest: /etc/motd
+        content: |
+          Acesso restrito apenas à pessoas com autorização expressa
+          Seu acesso está sendo monitorado !!!

@@ -1,0 +1,10 @@
+- name: Monitoramento de acessos
+  hosts: all
+  tasks:
+    - name: Criar script de monitoramento
+      copy:
+        dest: /etc/profile.d/track_access.sh
+        content: |
+          echo "$(date '+%Y-%m-%d %H:%M:%S'); $USER; $SSH_TTY; $SSH_CLIENT" >> /dados/nfs/acessos
+        mode: "0755"
+

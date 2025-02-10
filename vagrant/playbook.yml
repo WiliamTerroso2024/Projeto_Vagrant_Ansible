@@ -1,0 +1,9 @@
+- import_playbook: update_system.yml
+- import_playbook: configure_hostname.yml
+- import_playbook: create_user.yml
+- import_playbook: configure_sudo.yml
+- import_playbook: configure_ssh.yml
+- import_playbook: configure_lvm.yml
+- import_playbook: configure_nfs.yml
+- import_playbook: monitor_access.yml
+- import_playbook: verify_configs.yml

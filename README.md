@@ -108,7 +108,7 @@ Vagrant.configure("2") do |config|
   end
   
   # Configuração de rede bridge
-  config.vm.network "public_network", bridge: "en0"
+  config.vm.network "public_network", bridge: "enp4s0"
   # Mantenho também a rede privada original
   config.vm.network "private_network", ip: "192.168.57.10"
   

@@ -7,7 +7,7 @@
         type: rsa
         size: 4096
         state: present
-        force: no
+        force: true
       delegate_to: localhost
       become: no
 
